@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 //BookDto - The DTO used to access books
 type BookDto struct {
 	UUID        string    `json:"uuid"`
@@ -18,8 +20,19 @@ type AuthorDto struct {
 	Death     string `json:"death"`
 }
 
+func (author AuthorDto) String() string {
+	return fmt.Sprintf("AuthorDto{ uuid:%s, author:%s, lastName:%d, birthDay:%s, death:%s", author.UUID,
+		author.FirstName, author.LastName, author.Birthday, author.Death)
+}
+
+func (book BookDto) String() string {
+	return fmt.Sprintf("BookDTO{ uuid:%s, title:%s, noPages:%d, releaseDate:%s, author:%s", book.UUID,
+		book.Title, book.NoPages, book.ReleaseDate, book.Author)
+}
+
+
 //Books - the list of available books
-var Books = []BookDto{}
+var Books []BookDto
 
 // Authors - the list of available authors
-var Authors = []AuthorDto{}
+var Authors []AuthorDto
