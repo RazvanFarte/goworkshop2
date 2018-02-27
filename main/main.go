@@ -1,22 +1,59 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"encoding/json"
+)
+
+type Animal struct {
+	NoLegs int	`json:{noLegs}`
+	Name string
+}
+
+func (a Animal) CanTalk() bool {
+	return false
+}
+
+func (a Animal) String() string {
+	return fmt.Sprintf("Animal{%d %s}", a.NoLegs, a.Name)
+}
+
+type Talker interface {
+	CanTalk() bool
+}
 
 func main() {
 
-	fmt.Println("hello world!")
-	fmt.Println("My name is Claudia")
-	fmt.Println("Razvan Farte was here")
-	fmt.Println("my name is Ioan")
-	fmt.Println("Hello my name is Alex")
-	fmt.Println("And I want to merge my changes")
-	fmt.Println("hello my name is alin")
-	fmt.Println("Hello my nombre es Bogdan")
-	fmt.Println("my name is Ioan")
-	fmt.Println("salut lumeee!!!... de la Radu Dragan")
-	fmt.Println("Hello my name is Florin!")
-	fmt.Println("salut!")
-	fmt.Println("Hello, my name is Bogdan!")
-	fmt.Println("Hello my name is Eduard")
-	fmt.Println("Hello, my name is Andrei")
+	var creature Talker
+	creature = Animal{4, "Pig"}
+	fmt.Println(creature)
+	//_ -ignores the variable
+	values, err := ioutil.ReadFile("main/animals.json")
+
+	if(err != nil){
+		fmt.Println("cannot open the file")
+		panic(err)
+	}
+
+	// You have to convert the json to string
+	fmt.Println(string(values));
+
+	var animal []Animal // Slice, not array
+	err = json.Unmarshal(values, &animal)
+	if(err != nil){
+		fmt.Println("cannot open the file")
+		panic(err)
+	}
+
+	//Check values after deserialization
+	fmt.Println(animal)
+
+	serialized, err := json.Marshal(animal)
+	if(err != nil){
+		fmt.Println("cannot open the file")
+		panic(err)
+	}
+	fmt.Println(string(serialized))
+
 }
