@@ -21,12 +21,12 @@ type AuthorDto struct {
 }
 
 func (author AuthorDto) String() string {
-	return fmt.Sprintf("AuthorDto{ uuid:%s, author:%s, lastName:%d, birthDay:%s, death:%s", author.UUID,
+	return fmt.Sprintf("AuthorDto{ uuid:%s, author:%s, lastName:%d, birthDay:%s, death:%s}\n", author.UUID,
 		author.FirstName, author.LastName, author.Birthday, author.Death)
 }
 
 func (book BookDto) String() string {
-	return fmt.Sprintf("BookDTO{ uuid:%s, title:%s, noPages:%d, releaseDate:%s, author:%s", book.UUID,
+	return fmt.Sprintf("BookDTO{ uuid:%s, title:%s, noPages:%d, releaseDate:%s, author:%s}\n", book.UUID,
 		book.Title, book.NoPages, book.ReleaseDate, book.Author)
 }
 
