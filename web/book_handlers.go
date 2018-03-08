@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"encoding/json"
+	"goworkshop/persistence"
 )
 
 //Demonstrates the basic functionality of private and public modifiers in GO
@@ -28,8 +29,12 @@ func GetAllBooks(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetBookByUUID(w http.ResponseWriter, r *http.Request) {
+	//TODO Check this function by API
 	var bookUUID = mux.Vars(r)["uuid"]
-	book, err := model.Books.Get(bookUUID)
+
+	var book model.Book
+	err :=  persistence.Connection.Where("uuid = ", bookUUID).Find(&book, 1)
+
 	if err != nil {
 		fmt.Fprintf(w, "Error: %s", err)
 	} else {
@@ -39,7 +44,7 @@ func GetBookByUUID(w http.ResponseWriter, r *http.Request) {
 
 func DeleteBookByUUID(w http.ResponseWriter, r *http.Request) {
 	var bookUUID = mux.Vars(r)["uuid"]
-	err := model.Books.Delete(bookUUID)
+	err := persistence.Connection.Delete(&model.Book{ UUID : bookUUID}).Error
 	if err != nil {
 		fmt.Fprintf(w, "Failed to delete book: %s", err)
 	} else {
@@ -55,6 +60,7 @@ func AddBook(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Failed to create book: %s", err)
 	} else {
 		model.Books.Add(book)
+		persistence.Connection.Create(&book)
 		WriteJson(w, book)
 	}
 }
@@ -64,13 +70,15 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	bytes, _ := ioutil.ReadAll(r.Body)
 	err := json.Unmarshal(bytes, &book)
 	if err != nil {
-		fmt.Fprintf(w, "Failed to update book: %s", err)
+		fmt.Fprintf(w, "Failed to unmarshal book: %s", err)
 		return
 	}
-	book, err = model.Books.Update(book)
+
+	err = persistence.Connection.Save(&book).Error
 	if err != nil {
-		fmt.Fprintf(w, "Failed to update book: %s", err)
+		fmt.Fprintf(w, "Failed to unmarshal book: %s", err)
 		return
 	}
+
 	WriteJson(w, book)
 }
