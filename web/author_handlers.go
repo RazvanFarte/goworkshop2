@@ -16,7 +16,8 @@ func GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 
 func GetAuthorByUUID(w http.ResponseWriter, r *http.Request) {
 	authorUUID := mux.Vars(r)["uuid"]
-	author, err := persistence.Connection.First(authorUUID)
+	var author model.Author;
+	err := persistence.Connection.First(author, "uuid = " + string(authorUUID))
 	if err != nil {
 		fmt.Fprintf(w, "Error: %s", err)
 	} else {

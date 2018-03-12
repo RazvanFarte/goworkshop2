@@ -33,7 +33,10 @@ func GetBookByUUID(w http.ResponseWriter, r *http.Request) {
 	var bookUUID = mux.Vars(r)["uuid"]
 
 	var book model.Book
-	err :=  persistence.Connection.Where("uuid = ", bookUUID).Find(&book, 1)
+	err :=  persistence.
+		Connection.
+		Where("uuid = ", bookUUID).
+		Find(&book, 1).Error
 
 	if err != nil {
 		fmt.Fprintf(w, "Error: %s", err)
